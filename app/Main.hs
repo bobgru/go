@@ -144,13 +144,17 @@ handicap r1 r2 = undefined
 
 -- Given the board dimension and the handicap, determine
 -- the initial position.
-initPosition :: Dim -> Int -> Position
-initPosition d 0  = M.empty
-initPosition d h  = foldr f M.empty $ handicapIntersections d h
+initPositionOld :: Dim -> Int -> Position
+initPositionOld d 0  = M.empty
+initPositionOld d h  = foldr f M.empty $ handicapIntersections d h
   where f i pn = addPlay Black (Move i) pn
+
+initPosition :: Dim -> Int -> Position
+initPosition d h = foldr (addPlay Black) M.empty $ map Move $ handicapIntersections d h
 
 -- Determine the intersections of initial stones by handicap.
 handicapIntersections :: Dim -> Int -> [Intersection]
+handicapIntersections d 0 = []
 handicapIntersections d 1 = [ (2,2) ]
 handicapIntersections d 2 = [ (2,2), (d-3,d-3) ]
 handicapIntersections d 3 = [ (2,2), (d-3,d-3), (d-3,2) ]
