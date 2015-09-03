@@ -1,4 +1,4 @@
 module Main where
-import Lib
+import Game.Go.Core
 
 main = showIt g1
