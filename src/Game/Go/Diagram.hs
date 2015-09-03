@@ -20,15 +20,28 @@ fillFromPlayer :: Player -> Colour Double
 fillFromPlayer Black = black
 fillFromPlayer White = white
 
-stoneAt :: Dim -> Intersection -> Diagram B -> Diagram B
-stoneAt d (r,c) dg  = position [(p, dg)]
-  where
-    p :: Point V2 Double
-    p = p2 (r', c')
-    (r', c') = (fromIntegral c - 0.5, (- fromIntegral r) + 0.5)
+stonesAt :: [(Intersection, Diagram B)] -> Diagram B
+stonesAt pss = position $ map (\(p, d) -> (boardToDiagram p, d)) pss
 
-example =  stoneAt 9 (0,0) (stone Black)
-        <> stoneAt 9 (0,1) (stone White)
-        <> stoneAt 9 (1,0) (stone Black)
+stoneAt :: Intersection -> Diagram B -> Diagram B
+stoneAt (r,c) dg  = stonesAt [((r,c), dg)]
+
+boardToDiagram :: Intersection -> Point V2 Double
+boardToDiagram (r, c) = p2 (fromIntegral c - 0.5, (- fromIntegral r) + 0.5)
+
+
+b = stone Black
+w = stone White
+
+stones = [ ((0,0), b)
+         , ((0,1), w)
+         , ((1,0), b)
+         , ((0,8), w)
+         , ((4,4), b)
+         , ((8,0), w)
+         , ((8,8), w)
+         ]
+
+example =  stonesAt stones
         <> boardDgm 9
 
