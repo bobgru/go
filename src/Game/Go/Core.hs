@@ -4,20 +4,7 @@ import Data.List (sort, nub)
 import qualified Data.Map as M
 import Data.Map (Map)
 import Data.Maybe (isNothing, isJust, fromJust)
--- import Data.Rational
-
-type Dim = Int
-type Row = Dim
-type Col = Dim
-type Intersection = (Row, Col)
-data Player = Black | White deriving (Show, Eq)
-data Play = Move Intersection | Pass deriving (Show, Eq)
-type Turn = (Player, Play)
-type Position = Map Intersection Player
--- TODO add num black and white capture
--- turn into monad(s)?
-type Game = (Dim, Position, [(Position, Turn)])
-type Rank = Int
+import Game.Go.Types
 
 -- Calculate the neighbors of an intersection.
 neighbors :: Dim -> Intersection -> [Intersection]
