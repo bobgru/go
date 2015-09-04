@@ -6,6 +6,8 @@ import Game.Go.Core hiding ((#))
 import Game.Go.Types
 import Diagrams.Prelude
 import Diagrams.Backend.SVG.CmdLine
+import Data.List (intersperse)
+import Data.Map (toList)
 
 boardDgm :: Dim -> Diagram B
 boardDgm d = foldr1 (===) $ replicate d' row
@@ -26,6 +28,7 @@ stonesAt pss = position $ map (\(p, d) -> (boardToDiagram p, d)) pss
 stoneAt :: Intersection -> Diagram B -> Diagram B
 stoneAt (r,c) dg  = stonesAt [((r,c), dg)]
 
+-- Convert an intersection to its location in the diagram vector space.
 boardToDiagram :: Intersection -> Point V2 Double
 boardToDiagram (r, c) = p2 (fromIntegral c - 0.5, (- fromIntegral r) + 0.5)
 
@@ -33,15 +36,42 @@ boardToDiagram (r, c) = p2 (fromIntegral c - 0.5, (- fromIntegral r) + 0.5)
 b = stone Black
 w = stone White
 
-stones = [ ((0,0), b)
-         , ((0,1), w)
-         , ((1,0), b)
-         , ((0,8), w)
-         , ((4,4), b)
-         , ((8,0), w)
-         , ((8,8), w)
-         ]
+stonesFromPosition :: Position -> [(Intersection, Diagram B)]
+stonesFromPosition pn = map (\(i, pl) -> (i, stone pl)) $ toList pn
 
-example =  stonesAt stones
+g00 = initGame 9 3
+g01 = addTurn (White, Move (0, 0)) g00
+
+g02 = sequenceTurns g00 White [
+       (0,0) 
+     , (0,1)
+     , (1,0)
+     , (0,8)
+     , (4,4)
+     , (8,0)
+     , (8,8)
+    ]
+
+p00 = sequenceMoves (currentPosition g00) White [
+       (0,0) 
+     , (0,1)
+     , (1,0)
+     , (0,8)
+     , (4,4)
+     , (8,0)
+     , (8,8)
+    ]
+
+stones :: [(Intersection, Diagram B)]
+stones = stonesFromPosition p00
+
+history :: Game -> [Diagram B]
+history (d, _, pnts) = zipWith (<>) ss bs
+  where
+    ss = map (stonesAt . stonesFromPosition . fst) pnts
+    bs = repeat (boardDgm d)
+ 
+exampleOld =  stonesAt stones
         <> boardDgm 9
 
+example =  foldr1 (===) (intersperse (strutY 1.0) (history g02))

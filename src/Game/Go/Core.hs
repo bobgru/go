@@ -173,6 +173,10 @@ sequenceMoves :: Position -> Player -> [Intersection] -> Position
 sequenceMoves pn pl is = foldr nextPosition pn $ zip (cycle [pl, oppositePlayer pl]) is
   where nextPosition (pl, i) = addPlay pl (Move i)
 
+sequenceTurns :: Game -> Player -> [Intersection] -> Game
+sequenceTurns g pl is = foldr nextTurn g $ zip (cycle [pl, oppositePlayer pl]) is
+  where nextTurn (pl, i) = addTurn (pl, (Move i))
+
 -- TODO version of sequenceMoves that removes captures -- need to be in Game context
 -- to record the number of captures
 
