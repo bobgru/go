@@ -88,6 +88,7 @@ capture d s p (Move l) = ns
        # sort
        # nub
 
+oppositePlayer :: Player -> Player
 oppositePlayer Black = White
 oppositePlayer White = Black
 
