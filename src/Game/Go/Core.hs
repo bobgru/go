@@ -184,6 +184,3 @@ sequenceTurns g p ls = foldr nextTurn g $ zip (cycle [p, oppositePlayer p]) ls
 g0 = initGame 9 3
 g1 = addTurn (White, Move (0, 0)) g0
 showIt g = putStrLn $ displayGame g
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
