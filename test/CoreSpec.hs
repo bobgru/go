@@ -34,8 +34,8 @@ ownerOfIsAccurateWhenTrue d p  =  (d > 0) ==> ownerOf s' l == Just p
     s' = addMove p (Move l) s
 
 -- TODO randomize location checked
-ownerOfIsAccurateWhenFalse :: Dim -> Player -> Property
-ownerOfIsAccurateWhenFalse d p  =  (d > 0) ==> ownerOf s l == Nothing
+ownerOfIsAccurateWhenFalse :: Positive Dim -> Player -> Bool
+ownerOfIsAccurateWhenFalse (Positive d) p  =  ownerOf s l == Nothing
   where
     s  = initState d 0
     l  = (0, 0)
